@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Math</title>
+    <link rel="icon" href="maths-add-svgrepo-com.svg" type="image/x-icon">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            padding-bottom: 100px; /* Space for footer */
+        }
+
+        /* Modern Header */
+        header {
+            width: 100%;
+            background-color: #4CAF50;
+            padding: 15px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #333;
+        }
+
+        /* Main container styling */
+        .container {
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+            margin-top: 80px; /* Space for fixed header */
+        }
+
+        h1, h2 {
+            color: #444;
+            margin-bottom: 20px;
+        }
+
+        #start {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        #start:hover {
+            background-color: #45a049;
+        }
+
+        /* Input Box Styling */
+        #input {
+            padding: 12px;
+            font-size: 18px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-top: 20px;
+            width: 80%;
+            max-width: 300px;
+            box-sizing: border-box;
+        }
+
+        /* Math display */
+        #value {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        /* Result text */
+        #h2_f {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #f44336;
+        }
+
+        /* Stats Section */
+        .stats {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        /* Styling for the Math Div */
+        #math_div {
+            display: none;
+            margin-top: 20px;
+        }
+
+        /* Footer Styling */
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            font-family: 'Arial', sans-serif;
+            color: #555;
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+        }
+
+        footer p {
+            margin: 5px 0;
+        }
+
+        footer a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 600px) {
+            #input {
+                width: 100%;
+                max-width: none;
+            }
+
+            #start {
+                width: 100%;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="header-container">
+            <div class="logo">MathFun</div>
+            <nav>
+                <a href="#" id="home">Home</a>
+                <a href="#" id="about">About</a>
+                <a href="#" id="contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1>Fun Math Game</h1>
+        <p>Keep playing and have fun while learning!</p>
+        <br/>
+        <button onclick='start_math()' id='start'>Start</button>
+
+        <div id="math_div">
+            <h1 id="value"></h1>
+            <input type='number' id='input' placeholder="Enter your answer">
+            <h2 id='h2_f'>Enter the sum of the above values</h2>
+
+            <div class="stats">
+                <p id="correct_counter">Correct Answers: 0</p>
+                <p id="attempt_counter">Attempts: 0</p>
+                <p id="accuracy">Accuracy: 0%</p>
+                <p id="avg_time">Average Time: 0s</p>
+                <p id="total_time">Total Time: 0s</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>Created with ❤️ by <strong>Shiv</strong></p>
+        <p>Have any questions or feedback? Feel free to reach out at <a href="mailto:mintshiv1@gmail.com">mintshiv1@gmail.com</a></p>
+        <p>Stay curious and keep learning! ✨</p>
+    </footer>
+
+    <script>
+        var total_sum;
+        var list = [];
+        var correctAnswers = 0;
+        var totalAttempts = 0; 
+        var totalTime = 0;      
+        var startTime = 0;    
+
+        function start_math() {
+            console.log('Pressed Start');
+            generate_number();
+            document.getElementById('value').innerText = list.join(' + ') + ' = ?'; 
+            document.getElementById('start').style.display = 'none';
+            document.getElementById('math_div').style.display = 'block';
+            startTime = Date.now();  // Record the time when the question appears
+            return console.log('Completed');
+        }
+
+        // Function to automatically check the value when user types
+        function checkInput() {
+            var input_value = document.getElementById("input").value;
+            if (input_value === "") return;  // Skip if input is empty
+
+
+            var endTime = Date.now();
+            var timeTaken = (endTime - startTime) / 1000;  // Time in seconds
+            totalTime += timeTaken;  // Add time taken to the total time
+
+            if (parseInt(input_value) === total_sum) {
+                correctAnswers++;
+		totalAttempts++;
+                updateStats(timeTaken);
+		
+                document.getElementById("input").value = "";
+                document.getElementById('h2_f').innerText = "Correct!";
+                document.getElementById('h2_f').style.color = "green";
+
+		generate_number()
+		
+            } else if (parseInt(input_value) > total_sum) {
+		totalAttempts++;
+		updateStats(timeTaken);
+		
+                document.getElementById("input").value = "";
+                document.getElementById('h2_f').innerText = "!Wrong Answer";
+                document.getElementById('h2_f').style.color = "red";
+
+	        generate_number()         }
+
+
+
+            
+        }
+
+        function generate_number() {
+            
+            list = [];
+            for (var i = 0; i < 5; i++) {
+                var val = Math.floor(Math.random() * 81 + 20); 
+                list.push(val);
+            }
+
+            total_sum = list.reduce((a, b) => a + b, 0); // Sum up all numbers in the list
+            document.getElementById('value').innerText = list.join(' + ') + ' = ?'; 
+
+setTimeout(function() {
+    document.getElementById('h2_f').innerText = "Enter sum of above values";
+                document.getElementById('h2_f').style.color = "#555";
+
+}, 350); 
+
+            startTime = Date.now();  // Reset the time for the next question
+        }
+
+       
+        function updateStats(timeTaken) {
+            var accuracy = (correctAnswers / totalAttempts) * 100 || 0;
+            var avgTime = totalAttempts === 0 ? 0 : totalTime / totalAttempts;  // Calculate average time
+            document.getElementById('correct_counter').innerText = "Correct Answers: " + correctAnswers;
+            document.getElementById('attempt_counter').innerText = "Attempts: " + totalAttempts;
+            document.getElementById('accuracy').innerText = "Accuracy: " + accuracy.toFixed(2) + "%";
+            document.getElementById('avg_time').innerText = "Average Time: " + avgTime.toFixed(2) + "s";
+            document.getElementById('total_time').innerText = "Total Time: " + totalTime.toFixed(2) + "s";
+        }
+
+        // Attach event listener to the input box to check the value automatically
+        document.getElementById("input").addEventListener("input", checkInput);
+
+        // Home Link functionality: Scroll back to top of page (simulates going home)
+        document.getElementById('home').addEventListener('click', function() {
+            window.scrollTo(0, 0);
+        });
+
+        // About Link functionality: Show description about the website
+        document.getElementById('about').addEventListener('click', function() {
+            alert("This website helps improve your math skills, especially for competitive exams. It allows you to practice summing numbers, track your progress, and improve your accuracy and speed.");
+        });
+
+        // Contact Link functionality: Show Gmail for contacting
+        document.getElementById('contact').addEventListener('click', function() {
+            alert("For any inquiries or feedback, please contact us at: mintshiv1@gmail.com");
+        });
+    </script>
+</body>
+</html>
