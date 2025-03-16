@@ -211,7 +211,7 @@
         <div id="math_div">
             <h1 id="value"></h1>
             <input type='number' id='input' placeholder="Enter your answer">
-            <h2 id='h2_f'>Enter the sum of the above values</h2>
+            <h2 id='h2_f'>Enter sum of above values</h2>
 
             <div class="stats">
                 <p id="correct_counter">Correct Answers: 0</p>
@@ -255,13 +255,13 @@
 
 
             var endTime = Date.now();
-            var timeTaken = (endTime - startTime) / 1000;  // Time in seconds
-            totalTime += timeTaken;  // Add time taken to the total time
+            //var timeTaken = (endTime - startTime) / 1000;  // Time in seconds
+            totalTime =(endTime - startTime) / 1000;//+= timeTaken;  // Add time taken to the total time
 
             if (parseInt(input_value) === total_sum) {
                 correctAnswers++;
 		totalAttempts++;
-                updateStats(timeTaken);
+                updateStats();
 		
                 document.getElementById("input").value = "";
                 document.getElementById('h2_f').innerText = "Correct!";
@@ -271,10 +271,10 @@
 		
             } else if (parseInt(input_value) > total_sum) {
 		totalAttempts++;
-		updateStats(timeTaken);
+		updateStats();
 		
                 document.getElementById("input").value = "";
-                document.getElementById('h2_f').innerText = "!Wrong Answer";
+                document.getElementById('h2_f').innerText = "!Wrong Answer Correct :"+total_sum;
                 document.getElementById('h2_f').style.color = "red";
 
 	        generate_number()         }
@@ -299,13 +299,13 @@ setTimeout(function() {
     document.getElementById('h2_f').innerText = "Enter sum of above values";
                 document.getElementById('h2_f').style.color = "#555";
 
-}, 350); 
+}, 450); 
 
-            startTime = Date.now();  // Reset the time for the next question
+            //startTime = Date.now();  // Reset the time for the next question
         }
 
        
-        function updateStats(timeTaken) {
+        function updateStats() {
             var accuracy = (correctAnswers / totalAttempts) * 100 || 0;
             var avgTime = totalAttempts === 0 ? 0 : totalTime / totalAttempts;  // Calculate average time
             document.getElementById('correct_counter').innerText = "Correct Answers: " + correctAnswers;
